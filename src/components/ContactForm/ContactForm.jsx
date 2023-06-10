@@ -1,17 +1,24 @@
-//підключення використання хуків
+//підключення використання хуків коли не глобальний стейт юзаємо
 import { useState } from 'react';
 
-// бібдіотека автогенерування ключа
+// бібліотека автогенерування ключа
 import { nanoid } from 'nanoid';
 
-// стидізовані компоненти
+// стилізовані компоненти
 import { Input, Label, Button, Form, Wrap } from './ContactForm.styled';
 
 // бібліотека перевірки PropTypes
 import PropTypes from 'prop-types';
 
+// екшин створення контакту з redux стейту
+import { addContact } from 'redux/contacts/contactsSlice';
+
+import { useDispatch } from 'react-redux';
+
 // функціональний компонент
-export default function ContactForm({ addContact }) {
+export default function ContactForm() {
+  const dispatch = useDispatch();
+  // локальні стейти для контрольованих інпутів у формі
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -31,8 +38,8 @@ export default function ContactForm({ addContact }) {
   };
 
   // при сабміті форми прівент дефолт
-  // створюємо обʼєкт контакту із зшенерованим унікальним айді
-  // викликаємо отриману із пропсів функцію addContact
+  // створюємо обʼєкт контакту із згенерованим унікальним айді
+  // викликаємо  екшин addContact і передаємо в нього обʼєкт контакту
   // скидаємо значення імені і номара
   const onSubmitForm = e => {
     e.preventDefault();
@@ -41,7 +48,7 @@ export default function ContactForm({ addContact }) {
       name,
       number,
     };
-    addContact(newContact);
+    dispatch(addContact(newContact));
     setName('');
     setNumber('');
   };

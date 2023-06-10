@@ -1,13 +1,20 @@
-// піключення біббілоеки конфігурації стора
+// піключення бібілоеки конфігурації стора @reduxjs/toolkit
 import { configureStore } from '@reduxjs/toolkit';
 
-import { createReducer, createAction } from '@reduxjs/toolkit';
+// підключення логгера
+import logger from 'redux-logger';
+
+// підключення slice для нашого стору
+import { contactsSlice } from './contacts/contactsSlice';
+import { filterSlice } from './filter/filterSlice';
 
 // створення store.
 // містить стейти contacts і filter
-const store = configureStore({
+// middleware - для логгера консолі
+export const store = configureStore({
   reducer: {
-    contacts: [],
-    filter: '',
+    contacts: contactsSlice.reducer,
+    filter: filterSlice.reducer,
   },
+  middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger],
 });
