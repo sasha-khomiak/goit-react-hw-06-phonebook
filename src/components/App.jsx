@@ -1,5 +1,8 @@
-// імпорт реакту і компоненту реакту
-import React, { useState, useEffect } from 'react';
+// підключення useEffect
+// import { useEffect } from 'react';
+
+// підключення useSelector і useDispatch для роботи зі стейтами
+import { useSelector, useDispatch } from 'react-redux';
 
 // імпорт стилізованих компонентів для App
 import { Container } from './App.styled';
@@ -9,23 +12,14 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 import ContactForm from './ContactForm';
 
-//------------------
-
 // функціональний компонент на хуках
 export function App() {
-  //
-  //наші стейти
-  //contacts витягаємо з localStorage і парсимо
-  // якщо нічого нема і приходить null то присвоюємо []
-  const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) ?? []
-  );
-  const [filter, setFilter] = useState('');
+  // dispatch для виклику екшенів та передачі їх редʼюсеру
+  const dispatch = useDispatch();
 
-  // перезаписуємо localStorage коли стейт contacts оновився
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  //наші стейти contacts i filter
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
 
   // функція, яка додає новий контакт в contacts
   //в властивість contacts, що є масивом обʼєктів
@@ -34,11 +28,12 @@ export function App() {
   // якщо є збіг - показуєтсья повідомлення
   // якщо збігу немає, то додається новий контакт
   const addContact = newContact => {
-    if (checkNewNameRepeate(newContact.name)) {
-      alert(`${newContact.name} is already in contacts!`);
-    } else {
-      setContacts(prevContacts => [...prevContacts, newContact]);
-    }
+    // if (checkNewNameRepeate(newContact.name)) {
+    // alert(`${newContact.name} is already in contacts!`);
+    // } else {
+    //   setContacts(prevContacts => [...prevContacts, newContact]);
+    dispatch(addContact(newContact));
+    // }
   };
 
   //перевірка чи є контакт з таким іменем з врахуванням різних регістрів
@@ -53,15 +48,15 @@ export function App() {
   // функцція, яка видаляє наш контакт із contacts,
   //що є масивом обʼєктів отримавши айді елемента
   const deleteContact = index => {
-    setContacts(pevContacts =>
-      pevContacts.filter(element => element.id !== index)
-    );
+    // setContacts(pevContacts =>
+    //   pevContacts.filter(element => element.id !== index)
+    // );
   };
 
   // ф-ія обробник зміни в інфуті фільтра
   //перезаписує значення filter
   const handleChangeFilter = e => {
-    setFilter(e.currentTarget.value);
+    // setFilter(e.currentTarget.value);
   };
 
   // функція яка готує масив контактів для верстки
@@ -76,7 +71,7 @@ export function App() {
   return (
     <Container>
       <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} />
+      <ContactForm />
       <h2>Contacts</h2>
       <Filter handleChangeFilter={handleChangeFilter} value={filter} />
       <ContactList
