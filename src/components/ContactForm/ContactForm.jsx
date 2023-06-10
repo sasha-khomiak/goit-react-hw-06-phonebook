@@ -1,4 +1,4 @@
-//підключення використання хуків коли не глобальний стейт юзаємо
+//підключення використання хуків коли не глобальний стейт юзаємо для контрольованих інпутів
 import { useState } from 'react';
 
 // бібліотека автогенерування ключа
@@ -7,20 +7,23 @@ import { nanoid } from 'nanoid';
 // стилізовані компоненти
 import { Input, Label, Button, Form, Wrap } from './ContactForm.styled';
 
-// бібліотека перевірки PropTypes
-import PropTypes from 'prop-types';
+// бібліотека Dispatch для відправки екшенів на редʼюс
+// бібліотека useSelector для отримання даних з глобального стейту
+import { useDispatch, useSelector } from 'react-redux';
 
-// екшин створення контакту з redux стейту
+// екшин створення контакту з глобального redux стейту
 import { addContact } from 'redux/contacts/contactsSlice';
-
-import { useDispatch } from 'react-redux';
 
 // функціональний компонент
 export default function ContactForm() {
+  //dispatch для відправки екшенів на редʼюс
   const dispatch = useDispatch();
   // локальні стейти для контрольованих інпутів у формі
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  // Глобальний стейт наших контактів
+  const contacts = useSelector(state => state.contacts);
 
   // контрольовані інпути. реагуємо на івент
   // беремо нейм каррент таргет  і світч-кейс оновлюємо значення стейту
@@ -39,8 +42,12 @@ export default function ContactForm() {
 
   // при сабміті форми прівент дефолт
   // створюємо обʼєкт контакту із згенерованим унікальним айді
-  // викликаємо  екшин addContact і передаємо в нього обʼєкт контакту
-  // скидаємо значення імені і номара
+  // робимо перевірку чи унікальне імʼя
+  // якшо імʼя не унікальне то виводимо повідомлення
+  // якшо імʼя унікальне то викликаємо екшин addContact
+  // і передаємо в нього обʼєкт контакту і кидаємр в диспатч
+  // (а там уже оновлюється глобальний стетй)
+  // скидаємо значення імені і номера
   const onSubmitForm = e => {
     e.preventDefault();
     const newContact = {
@@ -48,9 +55,22 @@ export default function ContactForm() {
       name,
       number,
     };
-    dispatch(addContact(newContact));
-    setName('');
-    setNumber('');
+    if (checkNewNameRepeate(name)) {
+      alert(`${name} is already in contacts!`);
+    } else {
+      dispatch(addContact(newContact));
+      setName('');
+      setNumber('');
+    }
+  };
+
+  //перевірка чи є контакт з таким іменем з врахуванням різних регістрів
+  // повертає true або false
+  const checkNewNameRepeate = newName => {
+    let arrayOfNamesInLowerCase = contacts.map(item =>
+      item.name.toLocaleLowerCase()
+    );
+    return arrayOfNamesInLowerCase.includes(newName.toLocaleLowerCase());
   };
 
   // розмітка форми
@@ -62,7 +82,7 @@ export default function ContactForm() {
           <Input
             type="text"
             name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            // pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
             value={name}
@@ -74,7 +94,7 @@ export default function ContactForm() {
           <Input
             type="tel"
             name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
             value={number}
@@ -86,6 +106,3 @@ export default function ContactForm() {
     </Form>
   );
 }
-
-// перевірка PropTypes
-ContactForm.propTypes = { addContact: PropTypes.func.isRequired };
