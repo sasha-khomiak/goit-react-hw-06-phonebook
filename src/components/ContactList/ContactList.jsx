@@ -1,8 +1,8 @@
 // стилізовані компоненти
 import { Ul, Li, Name, Button } from './ContactList.styled';
 
-// useDispatch для прокилування екшена в редʼюс
-// useSelector для отримання значень в стейті
+// бібліотека Dispatch для відправки екшенів на редʼюс і запису в стейт
+// бібліотека useSelector для отримання даних з глобального стейту для верстки
 import { useDispatch, useSelector } from 'react-redux';
 
 // функція формування екщена для видалення контакту
@@ -11,9 +11,9 @@ import { deleteContact } from 'redux/contacts/contactsSlice';
 // наш компонент
 const ContactList = () => {
   const dispatch = useDispatch();
-  // отримуємо значення contacts
+  // отримуємо значення contacts. Реструктуризуємо {}, ьо там міститься обʼєкт зі значенням contacts і якому уже лежить масив
   // отримуємо значення filter
-  const contacts = useSelector(state => state.contacts);
+  const { contacts } = useSelector(state => state.contacts);
   const filter = useSelector(state => state.filter);
 
   // визначаємо список відфільтрованих контактів (для верстки) в залежності від значення filter

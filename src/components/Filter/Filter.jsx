@@ -1,11 +1,11 @@
 // Імпортуємо стилізований компонент
 import { Input } from './Filter.styled';
 
-// useSelector для отримання стейту фільтра
-// useDispatch для прокидання екшену в редʼюс
+// useSelector для отримання глобального стейту фільтра
+// useDispatch для прокидання екшену в редʼюс і запису в стейт
 import { useSelector, useDispatch } from 'react-redux';
 
-// функція формування екшен перезапису фільтра
+// функція формування екшен перезапису фільтра в стейті
 import { editFilter } from 'redux/filter/filterSlice';
 
 // компонент Filter
@@ -15,8 +15,8 @@ const Filter = () => {
   // dispatch для закидання для редʼюса обʼєкта екшена
   const dispatch = useDispatch();
 
-  // ф-ія обробник зміни в інфуті фільтра
-  //перезаписує значення filter в глобальному стейті
+  // ф-ія обробник зміни в інпуті фільтра
+  //перезаписує значення filter в глобальному стейті при кожному виникненні екшена
   const handleChangeFilter = e => {
     dispatch(editFilter(e.currentTarget.value));
   };

@@ -7,23 +7,25 @@ import { nanoid } from 'nanoid';
 // стилізовані компоненти
 import { Input, Label, Button, Form, Wrap } from './ContactForm.styled';
 
-// бібліотека Dispatch для відправки екшенів на редʼюс
-// бібліотека useSelector для отримання даних з глобального стейту
+// бібліотека Dispatch для відправки екшенів на редʼюс і запису в стейт
+// бібліотека useSelector для отримання даних з глобального стейту для верстки
 import { useDispatch, useSelector } from 'react-redux';
 
-// екшин створення контакту з глобального redux стейту
+// екшин додавання контакту підключаєм з глобального redux стейту
 import { addContact } from 'redux/contacts/contactsSlice';
 
 // функціональний компонент
 export default function ContactForm() {
-  //dispatch для відправки екшенів на редʼюс
+  //dispatch для відправки екшенів на редʼюс в результаті чого записується стейт
   const dispatch = useDispatch();
+
+  // Глобальний стейт наших контактів
+  // оскільки там масив з одним із значень contacts, то ми реструктуризуємо {}
+  const { contacts } = useSelector(state => state.contacts);
+
   // локальні стейти для контрольованих інпутів у формі
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
-  // Глобальний стейт наших контактів
-  const contacts = useSelector(state => state.contacts);
 
   // контрольовані інпути. реагуємо на івент
   // беремо нейм каррент таргет  і світч-кейс оновлюємо значення стейту
