@@ -6,12 +6,12 @@ import { Input } from './Filter.styled';
 import { useSelector, useDispatch } from 'react-redux';
 
 // функція формування екшен перезапису фільтра в стейті
-import { editFilter } from 'redux/filter/filterSlice';
+import { editFilter, getFilter } from 'redux/filter/filterSlice';
 
 // компонент Filter
 const Filter = () => {
   //отримаємо значення голбального стейту параметра filter
-  const value = useSelector(state => state.filter);
+  const value = useSelector(getFilter);
   // dispatch для закидання для редʼюса обʼєкта екшена
   const dispatch = useDispatch();
 

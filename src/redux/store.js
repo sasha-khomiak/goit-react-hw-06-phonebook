@@ -13,6 +13,17 @@ import { persistedContactsReducer } from '../redux/contacts/contactsSlice';
 // підключення persist для роботи з localstorage для Gate в index.js
 import { persistStore } from 'redux-persist';
 
+// підключення екшенів для прибирання помилки redux-persist
+import {
+  // persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+
 // створення store.
 // містить стейт-редюсер contacts (прогнаний через persist) і filter
 // middleware - для логгера консолі
@@ -21,7 +32,24 @@ export const store = configureStore({
     contacts: persistedContactsReducer,
     filter: filterSlice.reducer,
   },
-  middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger],
+  // // 1 logger + error debugger
+  middleware: getDefaultMiddleware => [
+    ...getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+    logger,
+  ],
+  // // 2 just error debugger
+  // middleware: getDefaultMiddleware =>
+  //   getDefaultMiddleware({
+  //     serializableCheck: {
+  //       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+  //     },
+  //   }),
+  // // 3 just logger
+  // middleware: getDefaultMiddleware => [...getDefaultMiddleware(), logger],
 });
 
 // експортуємо персістор, а його підключаємо в індекс файлі і огортаємо в компоненті PersistGate

@@ -51,3 +51,6 @@ export const persistedContactsReducer = persistReducer(
 
 //  експорти наших екшенів (для підключення в компонентах)
 export const { addContact, deleteContact } = contactsSlice.actions;
+
+//селектори
+export const getContacts = state => state.contacts;

@@ -12,7 +12,7 @@ import { Input, Label, Button, Form, Wrap } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 
 // екшин додавання контакту підключаєм з глобального redux стейту
-import { addContact } from 'redux/contacts/contactsSlice';
+import { addContact, getContacts } from 'redux/contacts/contactsSlice';
 
 // функціональний компонент
 export default function ContactForm() {
@@ -21,7 +21,7 @@ export default function ContactForm() {
 
   // Глобальний стейт наших контактів
   // оскільки там масив з одним із значень contacts, то ми реструктуризуємо {}
-  const { contacts } = useSelector(state => state.contacts);
+  const { contacts } = useSelector(getContacts);
 
   // локальні стейти для контрольованих інпутів у формі
   const [name, setName] = useState('');
