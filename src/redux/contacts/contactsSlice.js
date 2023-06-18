@@ -5,6 +5,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { persistReducer } from 'redux-persist';
 
+const initialState = { contacts: [] };
+
 //  створюємо Slice для 'contacts'
 // початковий стан
 // ред'юсери з двома екшенами додавання і видалення контакту і перезаписом localStorage
@@ -14,9 +16,7 @@ import { persistReducer } from 'redux-persist';
 // відповідно і до стейту ми звертаємося через точку до патаметра обʼєкту
 const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: {
-    contacts: [],
-  },
+  initialState,
   reducers: {
     addContact(state, action) {
       return { contacts: [...state.contacts, action.payload] };
