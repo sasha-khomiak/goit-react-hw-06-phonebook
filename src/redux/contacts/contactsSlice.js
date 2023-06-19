@@ -18,15 +18,25 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
   reducers: {
+    // тут пишемо всі редʼюсери нашого стейту
     addContact(state, action) {
-      return { contacts: [...state.contacts, action.payload] };
+      // 1 варіант
+      state.contacts.push(action.payload);
+      // або 2 варіант
+      // return { contacts: [...state.contacts, action.payload] };
     },
     deleteContact(state, action) {
-      return {
-        contacts: state.contacts.filter(
-          contact => contact.id !== action.payload
-        ),
-      };
+      // 1 варіант
+      // return {
+      //   contacts: state.contacts.filter(
+      //     contact => contact.id !== action.payload
+      //   ),
+      // };
+      // або 2 варіант
+      const index = state.contacts.findIndex(
+        contact => contact.id === action.payload.id
+      );
+      state.contacts.splice(index, 1);
     },
   },
 });
